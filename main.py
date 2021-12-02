@@ -90,18 +90,9 @@ class MyWindow(QMainWindow):
         self.buttonSearch.setDisabled(True)
         self.controlButtonSearchEnability = ControlButtonEnability(self.stockTicket, self.buttonSearch)
         self.stockTicket.textChanged.connect(self.controlButtonSearchEnability.checkStatus)
-
-
-def main():
-    app = QApplication(sys.argv)
-    win = MyWindow()
-    sys.exit(app.exec_())
-
-
-if __name__ == '__main__':
-    main()
-    
-       # Widgets do formulário da série Temporal
+        
+        
+   # Widgets do formulário da série Temporal
         self.epoch = QSpinBox()
         self.epoch.setRange(0,1000000)
         self.epoch.setSingleStep(100)
@@ -142,3 +133,15 @@ if __name__ == '__main__':
 
         self.controlButtonSubmitEnability = ControlButtonEnability(self.companyName, self.buttonSubmit)
         self.companyName.textChanged.connect(self.controlButtonSubmitEnability.checkStatus)
+
+
+def main():
+    app = QApplication(sys.argv)
+    win = MyWindow()
+    sys.exit(app.exec_())
+
+
+if __name__ == '__main__':
+    main()
+    
+    
