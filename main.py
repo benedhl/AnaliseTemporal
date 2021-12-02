@@ -133,6 +133,79 @@ class MyWindow(QMainWindow):
 
         self.controlButtonSubmitEnability = ControlButtonEnability(self.companyName, self.buttonSubmit)
         self.companyName.textChanged.connect(self.controlButtonSubmitEnability.checkStatus)
+        
+        # Widgets dos gráficos
+        self.bottom = QFrame()
+        self.bottom.setFrameShape(QFrame.StyledPanel)
+
+        self.image = QLabel()
+        self.dirImage = QtGui.QPixmap('images/imagemPadrao.png')
+        self.image.setPixmap(self.dirImage)
+        self.image.setAlignment(QtCore.Qt.AlignCenter)
+
+        self.buttonClean = QPushButton(self)
+        self.buttonClean.setMaximumWidth(100)
+        self.buttonClean.setText("Limpar") 
+        self.buttonClean.clicked.connect(self.setDefaultImage)
+
+        self.splitter = QSplitter(Qt.Vertical)
+        self.splitter.addWidget(self.image)
+
+        self.scrollArea = QScrollArea()
+        self.scrollArea.setWidget(self.splitter)       
+        
+        # Grupo com os elementos que exibirão os dados da ação da bolsa de valores
+        self.stockGroupBox = QGroupBox("Dados da Ação da Bolsa de Valores")
+        layout = QFormLayout()
+        layout.addRow(QLabel("Informe o símbolo da Ação:"), self.stockTicket)
+        layout.addRow(QLabel("Nome da empresa:"), self.companyName)
+        layout.addRow(QLabel("Setor:"), self.companySection)
+        layout.addRow(QLabel("País:"), self.companyCountry)
+        layout.addRow(QLabel("Moeda:"), self.currency)
+        layout.addWidget(self.buttonSearch)
+        layout.setVerticalSpacing(10)
+        self.stockGroupBox.setLayout(layout)
+
+        # Grupo com os elementos exibirão os valores para a análise temporal
+        self.temporalAnalysisGroupBox = QGroupBox("Dados Série Temporal")
+        layout = QFormLayout()
+        layout.addRow(QLabel("Número de épocas de treinamento:"), self.epoch)
+        layout.addRow(QLabel("Número de neurônios na camada oculta:"), self.totalHiddenLayers)
+        layout.addRow(QLabel("Valor Learning Rate:"), self.learningRate)
+        layout.addRow(QLabel("Valor Momentum:"), self.momentumValue)
+        layout.addRow(QLabel("Data Inicial:"), self.inicialDate)
+        layout.addRow(QLabel("Data Final:"), self.finalDate)
+        layout.addWidget(self.buttonSubmit)
+        layout.setVerticalSpacing(10)
+        self.temporalAnalysisGroupBox.setLayout(layout)    
+        
+        '''Gerar Layouts'''
+    def gerarLayouts(self):
+        # Criando janela
+        self.janelaAreaVisualizacao = QWidget(self)
+        self.setCentralWidget(self.janelaAreaVisualizacao)     
+
+        # Criando os layouts
+        self.mainLayout = QHBoxLayout()
+        self.leftLayout = QVBoxLayout()
+        self.rightLayout = QHBoxLayout()
+
+        # Adicionando os widgets
+        self.leftLayout.addWidget(self.stockGroupBox)
+        self.leftLayout.addWidget(self.temporalAnalysisGroupBox)
+        self.rightLayout.addWidget(self.scrollArea)
+        self.rightLayout.addWidget(self.buttonClean)
+
+        # Adicionando layouts filhos na janela principal
+        self.mainLayout.addLayout(self.leftLayout, 2)
+        self.mainLayout.addLayout(self.rightLayout, 20)
+
+        self.janelaAreaVisualizacao.setLayout(self.mainLayout)
+
+    def setDefaultImage(self):
+        self.image.setPixmap(self.dirImage)
+        self.image.setAlignment(QtCore.Qt.AlignCenter)
+
 
 
 def main():
