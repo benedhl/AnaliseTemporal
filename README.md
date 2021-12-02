@@ -11,4 +11,4 @@ O aplicativo desenvolvido realiza uma análise temporal, conjunto de observaçõ
 <h4 align="center"> 
 Imagem demostrando o funcionamento da aplicação:
 </h4>
-<img src="https://github.com/benedhl/AnaliseTemporal/blob/main/GifAnalisesTemporais.gif">
+<img align='center' src="https://github.com/benedhl/AnaliseTemporal/blob/main/GifAnalisesTemporais.gif">
