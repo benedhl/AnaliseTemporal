@@ -8,9 +8,9 @@
 </p>
 
 
-<div style="text-align:center">
+<p align='center'>
   <h4> 
     Imagem demostrando o funcionamento da aplicação:
   </h4>
   <img src="https://github.com/benedhl/AnaliseTemporal/blob/main/GifAnalisesTemporais.gif">
-</div>
+</p>
