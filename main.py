@@ -206,6 +206,81 @@ class MyWindow(QMainWindow):
         self.image.setPixmap(self.dirImage)
         self.image.setAlignment(QtCore.Qt.AlignCenter)
 
+        
+    def searchStockData(self):
+        self.stockSelected = self.stockTicket.text().upper()
+        self.stockData = yf.Ticker(self.stockSelected)
+        if (len(self.stockData.actions) > 0) :
+            self.companyName.setText(self.stockData.info['longName'])
+            self.companySection.setText(self.stockData.info['sector'])
+            self.companyCountry.setText(self.stockData.info['country'])
+            self.currency.setText(self.stockData.info['currency'])
+        else:
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Critical)
+            msg.setText("Erro")
+            msg.setInformativeText('Ação não encontrada!')
+            msg.setWindowTitle("Erro")
+            msg.exec_()
+            self.stockTicket.setFocus()
+
+    def handleTemporalAnalysis(self):
+
+        startDate = self.inicialDate.date().toString(Qt.ISODate)
+        endDate = self.finalDate.date().toString(Qt.ISODate)
+        data = yf.download(self.stockSelected, start=startDate, end=endDate)
+        data = data.Close
+        if (data.size < 910):
+            msg = QMessageBox()
+            msg.setStyleSheet("width: 120px;")
+            msg.setIcon(QMessageBox.Critical)
+            msg.setWindowTitle("Erro")
+            msg.setText("Erro - Dados insuficientes")
+            msg.setInformativeText("Total base de dados:  " +  str(data.size))
+            descricao = "Para realizar a análise e predição é necessário ter uma base de dados de no mínimo 910 valores de fechamento diário. \
+                \n\nPara que prosseguir modifique o período entre a data inicial e final selecionados" 
+            msg.setDetailedText(descricao)
+            msg.exec_()
+            self.inicialDate.setFocus()
+        else: 
+            # Criar janela deslizante
+            windowing = 50        
+            finalData = np.zeros([abs(data.size - windowing), windowing + 1])
+            for i in range(len(finalData)):
+                for j in range(windowing + 1):
+                    finalData[i][j] = data.iloc[i+j]
+        
+            # Normalizar entre 0 e 1
+            max = finalData.max()
+            min = finalData.min()
+            dif = max - min
+            finalData = (finalData - finalData.min())/dif
+            x = finalData[:, :-1]
+            y = finalData[:, -1]
+
+            # Converter para tensor
+            # Entrada do treinamento
+            # Saída do treinamento
+            trainingInput = torch.FloatTensor(x[:850, :])
+            trainingOutput = torch.FloatTensor(y[:850])
+            testOutput = torch.FloatTensor(y[850:])
+
+            # #Entrada do teste
+            # #Saída do teste
+            testInput = torch.FloatTensor(x[850: , :])
+
+            # Criar a instância do modelo
+            inputSize = trainingInput.size()[1]
+            hiddenSize = self.totalHiddenLayers.value()
+            model = Net(inputSize, hiddenSize)
+
+            # Critério de erro
+            criterion = torch.nn.MSELoss()
+
+            # Criando os paramêtros (learning rate[obrigatória] e momentum[opcional])
+            lr = self.learningRate.value()
+            momentum = self.momentumValue.value()
+            optimizer = torch.optim.SGD(model.parameters(), lr, momentum)
 
 
 def main():
