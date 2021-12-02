@@ -100,3 +100,45 @@ def main():
 
 if __name__ == '__main__':
     main()
+    
+       # Widgets do formulário da série Temporal
+        self.epoch = QSpinBox()
+        self.epoch.setRange(0,1000000)
+        self.epoch.setSingleStep(100)
+        self.epoch.setFixedWidth(90)
+        self.epoch.setValue(15000)
+        
+        self.totalHiddenLayers = QSpinBox()
+        self.totalHiddenLayers.setRange(0,1000)
+        self.totalHiddenLayers.setSingleStep(1)
+        self.totalHiddenLayers.setFixedWidth(90)
+        self.totalHiddenLayers.setValue(100)
+
+        self.learningRate = QDoubleSpinBox ()
+        self.learningRate.setSingleStep(0.1)
+        self.learningRate.setFixedWidth(90)
+        self.learningRate.setValue(0.09)
+
+        self.momentumValue = QDoubleSpinBox ()
+        self.momentumValue.setSingleStep(0.1)
+        self.momentumValue.setFixedWidth(90)
+        self.momentumValue.setValue(0.03)
+
+        self.inicialDate = QDateEdit(calendarPopup=True)
+        self.inicialDate.setDate(self.lastDay)
+        self.inicialDate.setMaximumDate(self.lastDay)
+        self.inicialDate.setFixedWidth(90)
+
+        self.finalDate = QDateEdit(calendarPopup=True)
+        self.finalDate.setDate(self.currentDate)
+        self.finalDate.setMaximumDate(self.currentDate)
+        self.finalDate.setFixedWidth(90)
+
+        self.buttonSubmit = QPushButton(self)
+        self.buttonSubmit.setMaximumWidth(100)
+        self.buttonSubmit.setText("Submeter") 
+        self.buttonSubmit.clicked.connect(self.handleTemporalAnalysis)
+        self.buttonSubmit.setDisabled(True)
+
+        self.controlButtonSubmitEnability = ControlButtonEnability(self.companyName, self.buttonSubmit)
+        self.companyName.textChanged.connect(self.controlButtonSubmitEnability.checkStatus)
