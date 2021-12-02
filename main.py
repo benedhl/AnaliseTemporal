@@ -50,6 +50,46 @@ class MyWindow(QMainWindow):
         self.initUI()
         self.show()
        
+    def initUI(self):
+        self.criarWidgets()
+        self.gerarLayouts()
+
+    '''Cria os widgets que encorporam o Menu e widgets que executaram ações'''
+    def criarWidgets(self):
+        self.currentDate = QDate.currentDate()
+        self.lastDay = self.currentDate.addDays(-1)
+
+        # Widgets do formulário da ação da bolsa de valores
+        self.stockTicket = QLineEdit()
+        self.stockTicket.setFixedWidth(120)
+        
+        self.companyName = QLineEdit('')
+        self.companyName.setReadOnly(True)
+        self.companyName.setFixedWidth(120)
+        self.companyName.setStyleSheet("border: 0px; background-color: transparent")
+
+        self.companySection = QLineEdit('')
+        self.companySection.setReadOnly(True)
+        self.companySection.setFixedWidth(120)
+        self.companySection.setStyleSheet("border: 0px; background-color: transparent")
+
+        self.companyCountry = QLineEdit('')
+        self.companyCountry.setReadOnly(True)
+        self.companyCountry.setFixedWidth(120)
+        self.companyCountry.setStyleSheet("border: 0px; background-color: transparent")
+
+        self.currency = QLineEdit('')
+        self.currency.setReadOnly(True)
+        self.currency.setFixedWidth(120)
+        self.currency.setStyleSheet("border: 0px; background-color: transparent")
+
+        self.buttonSearch = QPushButton(self)
+        self.buttonSearch.setMaximumWidth(100)
+        self.buttonSearch.setText("Procurar") 
+        self.buttonSearch.clicked.connect(self.searchStockData)
+        self.buttonSearch.setDisabled(True)
+        self.controlButtonSearchEnability = ControlButtonEnability(self.stockTicket, self.buttonSearch)
+        self.stockTicket.textChanged.connect(self.controlButtonSearchEnability.checkStatus)
 
 
 def main():
