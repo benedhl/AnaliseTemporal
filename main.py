@@ -281,6 +281,52 @@ class MyWindow(QMainWindow):
             lr = self.learningRate.value()
             momentum = self.momentumValue.value()
             optimizer = torch.optim.SGD(model.parameters(), lr, momentum)
+            
+            # Treinamento
+            model.train()
+            epochs = self.epoch.value()
+            errors = []
+            for epoch in range(epochs):
+                optimizer.zero_grad()
+                # Fazer o forward
+                yPred = model(trainingInput)
+                # Cálculo do erro
+                loss = criterion(yPred.squeeze(), trainingOutput)
+                errors.append(loss.item())
+                # Backpropagation
+                loss.backward()
+                optimizer.step()
+
+            # Testar o modelo já treinado
+            model.eval()
+            yPred = model(testInput)
+            afterTrain = criterion(yPred.squeeze(), testOutput)
+            self.plotcharts(errors, testOutput, yPred)
+
+
+    
+    def plotcharts(self, errors, testOutput, yPred):
+
+        errors = np.array(errors)
+        lasterrors = np.array(errors[-25000:])
+        plt.figure(figsize=(18, 4))
+        graf01 = plt.subplot(1, 3, 1) # nrows, ncols, index
+        graf01.set_title('Evolução dos Erros')
+        plt.plot(errors, '-')
+        plt.xlabel('Épocas')
+        graf02 = plt.subplot(1, 3, 2) # nrows, ncols, index
+        graf02.set_title('Últimos 25.000 erros')
+        plt.plot(lasterrors, '-')
+        plt.xlabel('Épocas')
+        graf03 = plt.subplot(1, 3, 3)
+        graf03.set_title('Resultado Predição')
+        a = plt.plot(testOutput.numpy(), 'y-', label='Real')
+        a = plt.plot(yPred.detach().numpy(), 'b-', label='Predicted')
+        plt.legend(loc=7)
+        newImage = "graficosResultado.png"
+        plt.savefig('./images/' + newImage, format="png")
+        newDirImageValuePerDay = QtGui.QPixmap('./images/' + newImage)
+        self.image.setPixmap(newDirImageValuePerDay)
 
 
 def main():
